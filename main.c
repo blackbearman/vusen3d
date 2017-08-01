@@ -1,8 +1,35 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <opencv/cv.h>
-#include <opencv/highgui.h>
+#include "vusen.h"
 //#include <opencv2/core/fast_math.hpp>
+
+int main()
+{
+    int width = 400;
+    int height = 300;
+    IplImage *img =  cvCreateImage( cvSize(width,height), IPL_DEPTH_8U, 3 );
+
+    int i,j;
+    int step  = img->widthStep/sizeof(uchar);
+    int channels = img->nChannels;
+    uchar* data = (uchar*) img->imageData;
+    for(i = 0; i< height; i++)
+        for(j = 0; j< width; j++) {
+            data[i*step+j*channels+0] = 255;
+            data[i*step+j*channels+1] = 255;
+            data[i*step+j*channels+2] = 255;
+    }
+
+    Line l = toLine(0,0,100,100);
+    drawLine(img,l);
+    int p[3];
+    p[0] = 6;
+    p[1] = 100;
+    p[2] = 0;
+
+    cvSaveImage("out2.jpg", img, p);
+    return 0;
+}
 
 int
 cvRound( double value )
@@ -33,30 +60,4 @@ cvRound( double value )
        the tests should allow +/-1 difference when the tested functions use round */
     return (int)(value + (value >= 0 ? 0.5 : -0.5));
 #endif
-}
-
-int main()
-{
-    int width = 400;
-    int height = 300;
-    IplImage *img =  cvCreateImage( cvSize(width,height), IPL_DEPTH_8U, 3 );
-
-    int i,j;
-    int step  = img->widthStep/sizeof(uchar);
-    int channels = img->nChannels;
-    uchar* data = (uchar*) img->imageData;
-    for(i = 0; i< height; i++)
-        for(j = 0; j< width; j++) {
-            data[i*step+j*channels+0] = i + j;
-            data[i*step+j*channels+1] = i - j;
-            data[i*step+j*channels+2] = i * j;
-    }
-
-    int p[3];
-    p[0] = 6;
-    p[1] = 100;
-    p[2] = 0;
-
-    cvSaveImage("out2.jpg", img, p);
-    return 0;
 }
