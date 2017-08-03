@@ -59,7 +59,7 @@ void calcPointsInCube(Cube* l);
 void fillLineInCube(Cube* c,int i);
 void fillSquareInCube(Cube* c,int i);
 
-CvPoint toCvPoint(Point p);
+CvPoint toCvPoint(Point* p);
 Point toPoint(double x, double y);
 Line toLine(double x1, double y1, double x2, double y2);
 Square toSquare(double x1, double y1, double x2, double y2,double x3, double y3, double x4, double y4);

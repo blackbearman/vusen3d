@@ -31,6 +31,7 @@ int main()
     return 0;
 }
 
+#if CV_VERSION_EPOCH > 2
 int
 cvRound( double value )
 {
@@ -60,4 +61,6 @@ cvRound( double value )
        the tests should allow +/-1 difference when the tested functions use round */
     return (int)(value + (value >= 0 ? 0.5 : -0.5));
 #endif
+
 }
+#endif
