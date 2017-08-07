@@ -5,14 +5,15 @@
 #include <opencv/highgui.h>
 
 struct v_Point{
+    /// unit
     int color;
-
     double x;
     double y;
     double z;
 };
 typedef struct v_Point Point;
 void setPoint(Point* p,int color,double x, double y, double z);
+void freePoint(Point* p);
 
 typedef struct v_Line Line;
 struct v_Line{
@@ -35,10 +36,11 @@ void setLine(Line* l,int color, Point* p0, double length, double phi, double the
 void calcPointsInLine(Line* l);
 
 struct v_Square{
+    /// unit
     int color;
     Line* lin0;
     double alpha;
-
+    /// construction
     Line* lin[4];
     Point* p[4];
 };

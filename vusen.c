@@ -1,5 +1,37 @@
 #include "vusen.h"
 
+/// Point constructor
+void setPoint(Point* p,int color,double x, double y, double z){
+    p->color = color;
+    p->x = x;
+    p->y = y;
+    p->z = z;
+}
+/// Point destructor
+void freePoint(Point* p){}
+
+/// Line constructor
+void setLine(Line* l,int color, Point* p0, double length, double phi, double theta){
+    l->color = color;
+    l->length = length;
+    l->phi = phi;
+    l->theta = theta;
+    l->p[0] = malloc(sizeof(Point));
+    l->p[1] = malloc(sizeof(Point));
+    *(l->p[0]) = *p0;
+    l->p0 = l->p[0];
+    calcPointsInLine(l);
+}
+void calcPointsInLine(Line* l){
+    l->p[1]->color = l->p[0]->color;
+    //*(l->p[1]) = toPoint(x2,y2);
+}
+/// Line destructor
+void freeLine(Line* l){
+    free(l->p[0]);
+    free(l->p[1]);
+}
+
 CvPoint toCvPoint(Point* p){
     return cvPoint(cvRound(p->x),cvRound(p->y));
 }

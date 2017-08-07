@@ -31,7 +31,7 @@ int main()
     return 0;
 }
 
-#if CV_VERSION_EPOCH > 2
+#if ((CV_VERSION_EPOCH > 2) || (!defined CV_VERSION_MAJOR))
 int
 cvRound( double value )
 {
