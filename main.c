@@ -20,8 +20,14 @@ int main()
             data[i*step+j*channels+2] = 255;
     }
 
+    Point p1;
+    setPoint(&p1,0,20,20,20);
     Line l = toLine(0,0,100,100);
+    setLine(&l,0,&p1,100,0.5,0.01);
     drawLine(img,l);
+    freeLine(&l);
+    freePoint(&p1);
+
     int p[3];
     p[0] = 6;
     p[1] = 100;

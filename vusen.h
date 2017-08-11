@@ -34,6 +34,7 @@ struct v_Line{
 
 void setLine(Line* l,int color, Point* p0, double length, double phi, double theta);
 void calcPointsInLine(Line* l);
+void freeLine(Line* l);
 
 struct v_Square{
     /// unit
@@ -45,8 +46,10 @@ struct v_Square{
     Point* p[4];
 };
 typedef struct v_Square Square;
-void calcPointsInSquare(Square* l);
-void fillLineInSquare(Square* c,int i);
+void setSquare(Square* sq, int color, Line* l0, double alpha);
+void calcPointsInSquare(Square* sq);
+void fillLineInSquare(Square* sq,int i);
+void freeSquare(Square* sq);
 
 struct v_Cube{
     int color;

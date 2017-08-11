@@ -50,10 +50,9 @@
 					<Add directory="$(#opencv_inst.include)" />
 				</Compiler>
 				<Linker>
-					<Add library="opencv_core320.dll" />
-					<Add library="opencv_highgui320.dll" />
-					<Add library="opencv_imgproc320.dll" />
-					<Add library="opencv_imgcodecs320.dll" />
+					<Add library="opencv_core" />
+					<Add library="opencv_highgui" />
+					<Add library="opencv_imgproc" />
 					<Add directory="$(#opencv_inst.lib)" />
 				</Linker>
 			</Target>

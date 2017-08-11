@@ -21,16 +21,59 @@ void setLine(Line* l,int color, Point* p0, double length, double phi, double the
     *(l->p[0]) = *p0;
     l->p0 = l->p[0];
     calcPointsInLine(l);
+    l->gamma = p0;
+    l->gammaLine = NULL;
+    l->gammaPointIndex = -1;
 }
+
+/// Calc second point
 void calcPointsInLine(Line* l){
     l->p[1]->color = l->p[0]->color;
-    //*(l->p[1]) = toPoint(x2,y2);
+    l->p[1]->x = l->p[0]->x + l->length * cos(l->phi) * cos(l->theta);
+    l->p[1]->y = l->p[0]->x + l->length * sin(l->phi) * cos(l->theta);
+    l->p[1]->z = l->p[0]->z + l->length * sin(l->theta);
 }
+
 /// Line destructor
 void freeLine(Line* l){
     free(l->p[0]);
     free(l->p[1]);
 }
+
+/// Square constructor
+void setSquare(Square* sq, int color, Line* l0, double alpha){
+    sq->color = color;
+    sq->alpha = alpha;
+    int i;
+    for(i=0; i<4; i++){
+        sq->lin[i] = malloc(sizeof(Line));
+        sq->p[i] = malloc(sizeof(Point));
+    }
+    *(sq->lin[0]) = *l0;
+    *(sq->p[0]) = *(l0->p[0]);
+    *(sq->p[1]) = *(l0->p[1]);
+    calcPointsInSquare(sq);
+    for(i=1; i<4; i++)
+        fillLineInSquare(sq,i);
+}
+
+/// Fill third and fourth point
+void calcPointsInSquare(Square* sq){
+    sq->p[2]->color = sq->p[0]->color;
+    sq->p[3]->color = sq->p[1]->color;
+}
+///
+void fillLineInSquare(Square* sq,int i){}
+
+/// Square destructor
+void freeSquare(Square* sq){
+    int i;
+    for(i=0; i<4; i++){
+        free(sq->lin[i]);
+        free(sq->p[i]);
+    }
+}
+
 
 CvPoint toCvPoint(Point* p){
     return cvPoint(cvRound(p->x),cvRound(p->y));
