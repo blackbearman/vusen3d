@@ -10,7 +10,7 @@ void setPoint(Point* p,int color,double x, double y, double z){
 /// Point destructor
 void freePoint(Point* p){}
 
-/// Line constructor
+/// Line constructor from Point
 void setLine(Line* l,int color, Point* p0, double length, double phi, double theta){
     l->color = color;
     l->length = length;
@@ -26,8 +26,32 @@ void setLine(Line* l,int color, Point* p0, double length, double phi, double the
     l->gammaPointIndex = -1;
 }
 
+/// Line constructor from Line
+void setNextLine(Line* l,int color, Line* l0, double length, double phi, double theta){
+    l->color = color;
+    l->length = length;
+    l->phi = phi; /// direction, based on vertical plane
+    l->theta = theta;  /// turn angle
+    l->p[0] = malloc(sizeof(Point));
+    l->p[1] = malloc(sizeof(Point));
+    *(l->p[0]) = *(l0->p[1]);
+    l->p0 = l->p[0];
+    calcPointsInLine2(l);
+    l->gamma = NULL;
+    l->gammaLine = l0;
+    l->gammaPointIndex = 1;
+}
+
 /// Calc second point
 void calcPointsInLine(Line* l){
+    l->p[1]->color = l->p[0]->color;
+    l->p[1]->x = l->p[0]->x + l->length * cos(l->phi) * cos(l->theta);
+    l->p[1]->y = l->p[0]->x + l->length * sin(l->phi) * cos(l->theta);
+    l->p[1]->z = l->p[0]->z + l->length * sin(l->theta);
+}
+
+/// Calc second point
+void calcPointsInLine2(Line* l){
     l->p[1]->color = l->p[0]->color;
     l->p[1]->x = l->p[0]->x + l->length * cos(l->phi) * cos(l->theta);
     l->p[1]->y = l->p[0]->x + l->length * sin(l->phi) * cos(l->theta);
