@@ -23,8 +23,25 @@ int main()
     Point p1;
     setPoint(&p1,0,20,20,20);
     Line l = toLine(0,0,100,100);
-    setLine(&l,0,&p1,100,0.5,0.01);
+    setLine(&l,0,&p1,100,0.5,0.00);
     drawLine(img,l);
+    Line l2[10];
+    for(i = 0; i < 10; i++) {
+        setNextLine(l2+i,0,&l,100,0.1*i,0.1);
+        printLine(l2+i);
+        drawLine(img,l2[i]);
+    }
+    //setNextLine(&l2,0,&l,100,0.1,0.02);
+    //printLine(&l);
+    //printLine(&l2);
+
+    Line l3[10];
+    setLine(l3,0,&p1,200,0.5,0.01);
+    for(i = 1; i < 10; i++) {
+        setNextLine(l3+i,0,l3+i-1,10,0.1,0.1*i);
+        printLine(l3+i);
+        drawLine(img,l3[i]);
+    }
     freeLine(&l);
     freePoint(&p1);
 

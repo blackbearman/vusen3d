@@ -10,7 +10,7 @@ void setPoint(Point* p,int color,double x, double y, double z){
 /// Point destructor
 void freePoint(Point* p){}
 
-/// Line constructor from Point
+/// Line constructor from Point (when last line is assumed as (1,0,pi/2)
 void setLine(Line* l,int color, Point* p0, double length, double phi, double theta){
     l->color = color;
     l->length = length;
@@ -25,7 +25,7 @@ void setLine(Line* l,int color, Point* p0, double length, double phi, double the
     l->gammaLine = NULL;
     l->gammaPointIndex = -1;
 }
-
+void calcSecondPointsInLine(Point* p1, Point* p0, double length, double phi, double theta, double alpha, double gamma);
 /// Line constructor from Line
 void setNextLine(Line* l,int color, Line* l0, double length, double phi, double theta){
     l->color = color;
@@ -36,8 +36,10 @@ void setNextLine(Line* l,int color, Line* l0, double length, double phi, double 
     l->p[1] = malloc(sizeof(Point));
     *(l->p[0]) = *(l0->p[1]);
     l->p0 = l->p[0];
-    calcPointsInLine2(l);
-    l->gamma = NULL;
+    //printLine(l);
+    calcSecondPointsInLine(l->p[1], l->p[0],l->length, l0->phi, l0->theta, phi, theta);
+    //printLine(l);
+    l->gamma = l0->p[1];
     l->gammaLine = l0;
     l->gammaPointIndex = 1;
 }
@@ -46,18 +48,29 @@ void setNextLine(Line* l,int color, Line* l0, double length, double phi, double 
 void calcPointsInLine(Line* l){
     l->p[1]->color = l->p[0]->color;
     l->p[1]->x = l->p[0]->x + l->length * cos(l->phi) * cos(l->theta);
-    l->p[1]->y = l->p[0]->x + l->length * sin(l->phi) * cos(l->theta);
+    l->p[1]->y = l->p[0]->y + l->length * sin(l->phi) * cos(l->theta);
     l->p[1]->z = l->p[0]->z + l->length * sin(l->theta);
 }
 
 /// Calc second point
-void calcPointsInLine2(Line* l){
-    l->p[1]->color = l->p[0]->color;
-    l->p[1]->x = l->p[0]->x + l->length * cos(l->phi) * cos(l->theta);
-    l->p[1]->y = l->p[0]->x + l->length * sin(l->phi) * cos(l->theta);
-    l->p[1]->z = l->p[0]->z + l->length * sin(l->theta);
+void calcSecondPointsInLine(Point* p1, Point* p0, double length, double phi, double theta, double alpha, double gamma){
+    double s = sin(gamma);
+    double b = s * sin(alpha);
+    double c = s * cos(alpha);
+    double d = sin(phi);
+    double e = cos(phi);
+    double f = cos(gamma);
+    double g = sin(theta);
+    double h = cos(theta);
+    double a = f*h+c*g;
+    p1->color = p0->color;
+    p1->x = p0->x + length * (a * c - b * d);
+    p1->y = p0->y + length * (-a * d - b * e);
+    p1->z = p0->z + length * (f * g - c * h);
 }
-
+void printLine(Line* l){
+    printf("(%lf,%lf,%lf)-(%lf,%lf,%lf)\n",l->p[0]->x,l->p[0]->y,l->p[0]->z,l->p[1]->x,l->p[1]->y,l->p[1]->z);
+}
 /// Line destructor
 void freeLine(Line* l){
     free(l->p[0]);

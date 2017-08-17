@@ -3,6 +3,7 @@
 
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
+#include <math.h>
 
 struct v_Point{
     /// unit
@@ -33,6 +34,7 @@ struct v_Line{
 };
 
 void setLine(Line* l,int color, Point* p0, double length, double phi, double theta);
+void setNextLine(Line* l,int color, Line* l0, double length, double phi, double theta);
 void calcPointsInLine(Line* l);
 void freeLine(Line* l);
 
