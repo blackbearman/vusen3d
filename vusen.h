@@ -34,7 +34,7 @@ struct v_Line{
 };
 
 void setLine(Line* l,int color, Point* p0, double length, double phi, double theta);
-void setNextLine(Line* l,int color, Line* l0, double length, double phi, double theta);
+void setNextLine(Line* l,int color, Line* l0, double length, double phiChange, double thetaChange);
 void calcPointsInLine(Line* l);
 void freeLine(Line* l);
 
