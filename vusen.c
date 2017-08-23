@@ -88,6 +88,7 @@ void setSquare(Square* sq, int color, Line* l0, double alpha){
         sq->p[i] = malloc(sizeof(Point));
     }
     *(sq->lin[0]) = *l0;
+    sq->lin0 = sq->lin[0];
     *(sq->p[0]) = *(l0->p[0]);
     *(sq->p[1]) = *(l0->p[1]);
     calcPointsInSquare(sq);
@@ -99,9 +100,56 @@ void setSquare(Square* sq, int color, Line* l0, double alpha){
 void calcPointsInSquare(Square* sq){
     sq->p[2]->color = sq->p[0]->color;
     sq->p[3]->color = sq->p[1]->color;
+    double sa = sin(sq->alpha); ///1
+    double ca = cos(sq->alpha); ///0
+    double sp = sin(sq->lin0->phi);
+    double cp = cos(sq->lin0->phi);
+    double st = sin(sq->lin0->theta);///0
+    double ct = cos(sq->lin0->theta);///1
+    double a = ca*st;
+    double deltaX = sq->lin0->length * ( ca * st * cp - sa * sp);
+    double deltaY = sq->lin0->length * ( ca * st * sp + sa * cp);
+    double deltaZ = sq->lin0->length * ( -ca * ct);
+    sq->p[2]->x = sq->p[1]->x + deltaX;
+    sq->p[2]->y = sq->p[1]->y + deltaY;
+    sq->p[2]->z = sq->p[1]->z + deltaZ;
+    sq->p[3]->x = sq->p[0]->x + deltaX;
+    sq->p[3]->y = sq->p[0]->y + deltaY;
+    sq->p[3]->z = sq->p[0]->z + deltaZ;
 }
 ///
-void fillLineInSquare(Square* sq,int i){}
+void fillLineInSquare(Square* sq,int i){
+    sq->lin[i]->color = sq->lin0->color;
+    sq->lin[i]->length = sq->lin0->length;
+    switch(i){
+    case 1:
+        sq->lin[1]->phi = atan2(sq->p[2]->y - sq->p[1]->y, sq->p[2]->x - sq->p[1]->x);
+        sq->lin[1]->theta = acos((sq->p[2]->z - sq->p[1]->z)/sq->lin0->length);
+        sq->lin[1]->p[0] = sq->p[1];
+        sq->lin[1]->p0 = sq->lin[1]->p[0];
+        sq->lin[1]->p[1] = sq->p[2];
+        break;
+    case 2:
+        sq->lin[2]->phi = -sq->lin0->phi;
+        sq->lin[2]->theta = -sq->lin0->theta;
+        sq->lin[2]->p[0] = sq->p[2];
+        sq->lin[2]->p0 = sq->lin[2]->p[0];
+        sq->lin[2]->p[1] = sq->p[3];
+        break;
+    case 3:
+        sq->lin[3]->phi = -sq->lin[1]->phi;
+        sq->lin[3]->theta = -sq->lin[1]->theta;
+        sq->lin[3]->p[0] = sq->p[3];
+        sq->lin[3]->p0 = sq->lin[3]->p[0];
+        sq->lin[3]->p[1] = sq->p[0];
+        break;
+    }
+}
+
+void printSquare(Square* sq){
+    printf("{(%lf,%lf,%lf),(%lf,%lf,%lf)\n",sq->p[0]->x,sq->p[0]->y,sq->p[0]->z,sq->p[1]->x,sq->p[1]->y,sq->p[1]->z);
+    printf("{(%lf,%lf,%lf),(%lf,%lf,%lf)}\n",sq->p[2]->x,sq->p[2]->y,sq->p[2]->z,sq->p[3]->x,sq->p[3]->y,sq->p[3]->z);
+}
 
 /// Square destructor
 void freeSquare(Square* sq){
@@ -114,7 +162,7 @@ void freeSquare(Square* sq){
 
 
 CvPoint toCvPoint(Point* p){
-    return cvPoint(cvRound(p->x),cvRound(p->y));
+    return cvPoint(cvRound(p->x),cvRound(p->z));
 }
 
 Point toPoint(double x, double y){
@@ -135,6 +183,12 @@ Line toLine(double x1, double y1, double x2, double y2){
 
 void drawLine(CvArr* img,Line l){
     cvLine(img,toCvPoint(l.p[0]),toCvPoint(l.p[1]),CV_RGB(0,0,0),1,8,0);
+}
+
+void drawSquare(CvArr* img,Square sq){
+    int i;
+    for(i = 0; i < 4; i++)
+        drawLine(img,*(sq.lin[i]));
 }
 
 Square toSquare(double x1, double y1, double x2, double y2,double x3, double y3, double x4, double y4){

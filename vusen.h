@@ -51,6 +51,7 @@ typedef struct v_Square Square;
 void setSquare(Square* sq, int color, Line* l0, double alpha);
 void calcPointsInSquare(Square* sq);
 void fillLineInSquare(Square* sq,int i);
+void printSquare(Square* sq);
 void freeSquare(Square* sq);
 
 struct v_Cube{

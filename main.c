@@ -27,7 +27,7 @@ int main()
     drawLine(img,l);
     Line l2[10];
     for(i = 0; i < 10; i++) {
-        setNextLine(l2+i,0,&l,100,0.1*i,0.1);
+        setNextLine(l2+i,0,&l,100,0.1*i,0.0);
         printLine(l2+i);
         drawLine(img,l2[i]);
     }
@@ -36,7 +36,7 @@ int main()
     //printLine(&l2);
 
     Line l3[10];
-    setLine(l3,0,&p1,200,0.5,0.01);
+    setLine(l3,0,&p1,200,0.5,0.0);
     for(i = 1; i < 10; i++) {
         setNextLine(l3+i,0,l3+i-1,10,0.1,0.1*i);
         printLine(l3+i);
@@ -50,6 +50,35 @@ int main()
     p[1] = 100;
     p[2] = 0;
 
+    Point p3;
+    setPoint(&p3,0,100,100,100);
+    Line l5;
+    Square sq0;
+    setLine(&l5,0,&p3,50,2*M_PI_2/3,0);
+    setSquare(&sq0,0,&l5,0);
+    drawSquare(img,sq0);
+
+    setLine(&l5,0,&p3,50,2*M_PI_2/3,0);
+    setSquare(&sq0,0,&l5,2*M_PI_2/3);
+    drawSquare(img,sq0);
+
+    setLine(&l5,0,&p3,50,2*M_PI_2/3,0);
+    setSquare(&sq0,0,&l5,0);
+    //drawSquare(img,sq0);
+
+    setLine(&l5,0,&p3,50,2*M_PI_2/3,2*M_PI_2/3);
+    setSquare(&sq0,0,&l5,2*M_PI_2/3);
+    //drawSquare(img,sq0);
+  printSquare(&sq0);
+
+    Point pxy;
+    setPoint(&pxy,0,2,2,2);
+    Line lx;
+    setLine(&lx,0,&p3,300,0,0.0);
+    Line ly;
+    setLine(&ly,0,&p3,200,0.0,M_PI_2);
+    drawLine(img,lx);
+    drawLine(img,ly);
     cvSaveImage("out2.jpg", img, p);
     return 0;
 }
