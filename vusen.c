@@ -7,6 +7,9 @@ void setPoint(Point* p,int color,double x, double y, double z){
     p->y = y;
     p->z = z;
 }
+void printPoint(Point* p){
+    printf("(%lf,%lf,%lf)\n",p->x,p->y,p->z);
+}
 /// Point destructor
 void freePoint(Point* p){}
 
@@ -108,7 +111,7 @@ void calcPointsInSquare(Square* sq){
     double ct = cos(sq->lin0->theta);///1
     double a = ca*st;
     double deltaX = sq->lin0->length * ( ca * st * cp - sa * sp);
-    double deltaY = sq->lin0->length * ( ca * st * sp + sa * cp);
+    double deltaY = sq->lin0->length * ( -ca * st * sp + sa * cp);
     double deltaZ = sq->lin0->length * ( -ca * ct);
     sq->p[2]->x = sq->p[1]->x + deltaX;
     sq->p[2]->y = sq->p[1]->y + deltaY;

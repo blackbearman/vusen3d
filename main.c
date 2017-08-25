@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "vusen.h"
+#include "geometry.h"
 //#include <opencv2/core/fast_math.hpp>
 
 int main()
@@ -80,6 +81,11 @@ int main()
     drawLine(img,lx);
     drawLine(img,ly);
     cvSaveImage("out2.jpg", img, p);
+    setLine(&l,0,&pxy,100,M_PI_2,0);
+    setPoint(&p3,0,1,0,0);
+    printPoint(&p3);
+    rotate(&pxy,&p3,&l,M_PI_2);
+    printPoint(&pxy);
     return 0;
 }
 

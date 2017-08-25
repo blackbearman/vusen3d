@@ -14,6 +14,7 @@ struct v_Point{
 };
 typedef struct v_Point Point;
 void setPoint(Point* p,int color,double x, double y, double z);
+void printPoint(Point* p);
 void freePoint(Point* p);
 
 typedef struct v_Line Line;
