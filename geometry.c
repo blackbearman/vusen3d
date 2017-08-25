@@ -57,3 +57,15 @@ void rotate(Point* dest, Point* src, Line* axe, double angle){
     dest->z = r.z + axe->p[0]->z;
 }
 
+void recalcCartesian(Line* l) {
+    l->p[1]->x = l->p[0]->x + l->length * cos(l->phi) * cos(l->theta);
+    l->p[1]->y = l->p[0]->y + l->length * sin(l->phi) * cos(l->theta);
+    l->p[1]->z = l->p[0]->z + l->length * sin(l->theta);
+}
+
+void Projecting(Point* p){
+    static const double half_s45 = sqrt(2.0) / 4.0;
+    double z_projection = p->z * half_s45;
+    double sx = p->x - z_projection;
+    double sy = p->y + z_projection;
+}

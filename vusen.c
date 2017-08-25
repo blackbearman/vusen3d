@@ -23,7 +23,9 @@ void setLine(Line* l,int color, Point* p0, double length, double phi, double the
     l->p[1] = malloc(sizeof(Point));
     *(l->p[0]) = *p0;
     l->p0 = l->p[0];
-    calcPointsInLine(l);
+    l->p[1]->color = l->p[0]->color;
+    /// Calc second point
+    recalcCartesian(l);
     l->gamma = p0;
     l->gammaLine = NULL;
     l->gammaPointIndex = -1;
@@ -41,19 +43,16 @@ void setNextLine(Line* l,int color, Line* l0, double length, double phiChange, d
     l->p0 = l->p[0];
     //printLine(l);
     //calcSecondPointsInLine(l->p[1], l->p[0],l->length, l0->phi, l0->theta, phi, theta);
-    calcPointsInLine(l);
+    l->p[1]->color = l->p[0]->color;
+    /// Calc second point
+    recalcCartesian(l);
     //printLine(l);
     l->gamma = l0->p[1];
     l->gammaLine = l0;
     l->gammaPointIndex = 1;
 }
 
-/// Calc second point
-void calcPointsInLine(Line* l){
-    l->p[1]->color = l->p[0]->color;
-    l->p[1]->x = l->p[0]->x + l->length * cos(l->phi) * cos(l->theta);
-    l->p[1]->y = l->p[0]->y + l->length * sin(l->phi) * cos(l->theta);
-    l->p[1]->z = l->p[0]->z + l->length * sin(l->theta);
+void setTurnLine(Line* l,int color, Line* l0, double length, double turnAngle, double dirAngle){
 }
 
 /// Calc second point
@@ -165,7 +164,11 @@ void freeSquare(Square* sq){
 
 
 CvPoint toCvPoint(Point* p){
-    return cvPoint(cvRound(p->x),cvRound(p->z));
+    static const double half_s45 = sqrt(2.0) / 4.0;
+    double z_projection = p->z * half_s45;
+    double sx = p->x - z_projection;
+    double sy = p->y + z_projection;
+    return cvPoint(cvRound(sx),cvRound(sy));
 }
 
 Point toPoint(double x, double y){
