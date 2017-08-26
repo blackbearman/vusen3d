@@ -51,6 +51,7 @@ void setLine(Line* l,int color, Point* p0, double length, double phi, double the
 void setNextLine(Line* l,int color, Line* l0, double length, double phiChange, double thetaChange);
 void setTurnLine(Line* l,int color, Line* l0, double length, double turnAngle, double dirAngle);
 void calcPointsInLine(Line* l);
+void printLine(Line* l);
 void freeLine(Line* l);
 
 

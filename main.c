@@ -96,6 +96,10 @@ int main()
     p[0] = 6;
     p[1] = 100;
     p[2] = 0;
+    //cvNamedWindow("Display window", CV_WINDOW_AUTOSIZE);// Create a window for display.
+    //cvShowImage("Display window", img);
+    //cvWaitKey(0);
+    cvFlip(img,NULL,0);
     cvSaveImage("out2.jpg", img, p);
 /*
     setLine(&l,0,&pxy,100,M_PI_2,0);
