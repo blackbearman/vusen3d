@@ -1,8 +1,5 @@
 #include "geometry.h"
-
-double rotationMatrix[4][4];
-double inputMatrix[4][1] = {0.0, 0.0, 0.0, 0.0};
-double outputMatrix[4][1] = {0.0, 0.0, 0.0, 0.0};
+#include <stdio.h>
 
 Point multiplyMatrix(double m[3][3], Point t)
 {
@@ -41,6 +38,7 @@ void printMatrix(double m[3][3]) {
     }
 }
 void rotate(Point* dest, Point* src, Line* axe, double angle){
+    dest->color = src->color;
     double u = (axe->p[1]->x - axe->p[0]->x) / axe->length;
     double v = (axe->p[1]->y - axe->p[0]->y) / axe->length;
     double w = (axe->p[1]->z - axe->p[0]->z) / axe->length;
@@ -58,14 +56,7 @@ void rotate(Point* dest, Point* src, Line* axe, double angle){
 }
 
 void recalcCartesian(Line* l) {
-    l->p[1]->x = l->p[0]->x + l->length * cos(l->phi) * cos(l->theta);
-    l->p[1]->y = l->p[0]->y + l->length * sin(l->phi) * cos(l->theta);
-    l->p[1]->z = l->p[0]->z + l->length * sin(l->theta);
-}
-
-void Projecting(Point* p){
-    static const double half_s45 = sqrt(2.0) / 4.0;
-    double z_projection = p->z * half_s45;
-    double sx = p->x - z_projection;
-    double sy = p->y + z_projection;
+    l->p[1]->x = l->p[0]->x + l->length * cos(l->phi) * sin(l->theta);
+    l->p[1]->y = l->p[0]->y + l->length * sin(l->phi) * sin(l->theta);
+    l->p[1]->z = l->p[0]->z + l->length * cos(l->theta);
 }

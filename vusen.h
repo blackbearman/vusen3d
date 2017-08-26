@@ -32,8 +32,8 @@ struct v_Line{
     int color;
     Point* p0;
     double length;
-    double phi;
-    double theta;
+    double phi;  /// from X
+    double theta; /// from Z
     /// construction
     Point* p[2];
     /// links on line level (gamma-lambda)
@@ -49,6 +49,7 @@ struct v_Line{
 
 void setLine(Line* l,int color, Point* p0, double length, double phi, double theta);
 void setNextLine(Line* l,int color, Line* l0, double length, double phiChange, double thetaChange);
+void setTurnLine(Line* l,int color, Line* l0, double length, double turnAngle, double dirAngle);
 void calcPointsInLine(Line* l);
 void freeLine(Line* l);
 

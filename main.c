@@ -23,20 +23,27 @@ int main()
     }
 
     Point p1;
-    setPoint(&p1,0,20,20,20);
-    Line l = toLine(0,0,100,100);
-    setLine(&l,0,&p1,100,0.5,0.00);
+    setPoint(&p1,0,120,120,120);
+    Line l;
+    setLine(&l,0,&p1,10,M_PI_4,M_PI_2);
     drawLine(img,&l);
+    printLine(&l);
+    Line up;
+    setTurnLine(&up,0,&l,10,M_PI_2,0);
+    drawLine(img,&up);
+    printLine(&up);
+    /*
     Line l2[10];
     for(i = 0; i < 10; i++) {
         setNextLine(l2+i,0,&l,100,0.1*i,0.0);
         printLine(l2+i);
         drawLine(img,l2+i);
     }
+    */
     //setNextLine(&l2,0,&l,100,0.1,0.02);
     //printLine(&l);
     //printLine(&l2);
-
+/*
     Line l3[10];
     setLine(l3,0,&p1,200,0.5,0.0);
     for(i = 1; i < 10; i++) {
@@ -44,16 +51,14 @@ int main()
         printLine(l3+i);
         drawLine(img,l3+i);
     }
+    */
     freeLine(&l);
     freePoint(&p1);
 
-    int p[3];
-    p[0] = 6;
-    p[1] = 100;
-    p[2] = 0;
-
     Point p3;
     setPoint(&p3,0,100,100,100);
+/*
+
     Line l5;
     Square sq0;
     setLine(&l5,0,&p3,50,2*M_PI_2/3,0);
@@ -71,23 +76,33 @@ int main()
     setLine(&l5,0,&p3,50,2*M_PI_2/3,2*M_PI_2/3);
     setSquare(&sq0,0,&l5,2*M_PI_2/3);
     //drawSquare(img,&sq0);
-  printSquare(&sq0);
-
+  //printSquare(&sq0);
+*/
     Point pxy;
-    printf("red %x\n",rgb(255,0,0));
+    //printf("red %x\n",rgb(255,0,0));
     setPoint(&pxy,rgb(255,0,0),2,2,2);
     Line lx;
-    setLine(&lx,rgb(255,0,0),&p3,300,0,0.0);
+    setLine(&lx,rgb(255,0,0),&p3,300,0.0,M_PI_2);
     Line ly;
-    setLine(&ly,rgb(255,0,0),&p3,200,0.0,M_PI_2);
+    setLine(&ly,rgb(0,255,0),&p3,200,M_PI_2,M_PI_2);
+    Line lz;
+    setLine(&lz,rgb(0,0,255),&p3,200,0.0,0);
     drawLine(img,&lx);
     drawLine(img,&ly);
+    drawLine(img,&lz);
     drawPoint(img,&pxy);
+
+    int p[3];
+    p[0] = 6;
+    p[1] = 100;
+    p[2] = 0;
     cvSaveImage("out2.jpg", img, p);
+/*
     setLine(&l,0,&pxy,100,M_PI_2,0);
     setPoint(&p3,0,1,0,0);
     printPoint(&p3);
     rotate(&pxy,&p3,&l,M_PI_2);
     printPoint(&pxy);
+    */
     return 0;
 }

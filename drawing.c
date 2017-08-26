@@ -11,10 +11,10 @@ int rgb(unsigned char red, unsigned char green, unsigned char blue) {
 
 CvPoint toCvPoint(Point* p){
     static double half_s45 = M_SQRT2 / 4.0;
-    double z_projection = p->z * half_s45;
-    double sx = p->x - z_projection;
-    double sy = p->y + z_projection;
-    return cvPoint(cvRound(sx),cvRound(sy));
+    double x_projection = p->x * half_s45;
+    double sz = p->z - x_projection;
+    double sy = p->y - x_projection;
+    return cvPoint(cvRound(sy),cvRound(sz));
 }
 
 unsigned char component(int color, int index) {

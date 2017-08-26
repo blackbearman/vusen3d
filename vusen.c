@@ -16,8 +16,7 @@ void printPoint(Point* p){
 /// Point destructor
 void freePoint(Point* p){}
 
-/// Line constructor from Point (when last line is assumed as (-1,0,0)-(0,0,0)
-void setLine(Line* l,int color, Point* p0, double length, double phi, double theta){
+void setLineBase(Line* l,int color, Point* p0, double length, double phi, double theta){
     l->color = color;
     l->length = length;
     l->phi = phi;
@@ -27,6 +26,11 @@ void setLine(Line* l,int color, Point* p0, double length, double phi, double the
     *(l->p[0]) = *p0;
     l->p0 = l->p[0];
     l->p[1]->color = l->p[0]->color;
+}
+
+/// Line constructor from Point (when last line is assumed as (-1,0,0)-(0,0,0)
+void setLine(Line* l,int color, Point* p0, double length, double phi, double theta){
+    setLineBase(l,color,p0,length,phi,theta);
     /// Calc second point
     recalcCartesian(l);
     l->gamma = p0;
@@ -36,17 +40,8 @@ void setLine(Line* l,int color, Point* p0, double length, double phi, double the
 void calcSecondPointsInLine(Point* p1, Point* p0, double length, double phi, double theta, double alpha, double gamma);
 /// Line constructor from Line
 void setNextLine(Line* l,int color, Line* l0, double length, double phiChange, double thetaChange){
-    l->color = color;
-    l->length = length;
-    l->phi = l0->phi + phiChange;
-    l->theta = l0->theta + thetaChange;
-    l->p[0] = malloc(sizeof(Point));
-    l->p[1] = malloc(sizeof(Point));
-    *(l->p[0]) = *(l0->p[1]);
-    l->p0 = l->p[0];
-    //printLine(l);
+    setLineBase(l,color,l0->p[1],length,l0->phi+phiChange,l0->theta + thetaChange);
     //calcSecondPointsInLine(l->p[1], l->p[0],l->length, l0->phi, l0->theta, phi, theta);
-    l->p[1]->color = l->p[0]->color;
     /// Calc second point
     recalcCartesian(l);
     //printLine(l);
@@ -56,6 +51,27 @@ void setNextLine(Line* l,int color, Line* l0, double length, double phiChange, d
 }
 
 void setTurnLine(Line* l,int color, Line* l0, double length, double turnAngle, double dirAngle){
+    Point endPoint;
+    double phi = l0->phi;
+    double theta = l0->theta + turnAngle;
+    if(theta > M_PI) {
+        theta -= M_PI;
+        phi = -phi;
+    }
+    if(theta < 0) {
+        theta = -theta;
+        phi = -phi;
+    }
+    setPoint(&endPoint,l0->p[1]->color,
+             l0->p[1]->x + length * cos(phi) * sin(theta),
+             l0->p[1]->y + length * sin(phi) * sin(theta),
+             l0->p[1]->z + length * cos(theta));
+    Point turnPoint;
+    rotate(&turnPoint,&endPoint,l0,dirAngle);
+    phi = atan2(turnPoint.y - l0->p[1]->y, turnPoint.x - l0->p[1]->x);
+    theta = acos((turnPoint.z - l0->p[1]->z)/length);
+    setLineBase(l,color,l0->p[1],length,phi,theta);
+    *(l->p[1]) = turnPoint;
 }
 
 /// Calc second point
