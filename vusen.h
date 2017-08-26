@@ -1,28 +1,32 @@
 #ifndef VUSEN_H_INCLUDED
 #define VUSEN_H_INCLUDED
 
-#include <opencv/cv.h>
-#include <opencv/highgui.h>
+
 #include <math.h>
 
 typedef struct v_Point Point;
+typedef struct v_Line Line;
+typedef struct v_Square Square;
+typedef struct v_Cube Cube;
+
 struct v_Point{
     /// unit
     int color;
     double x;
     double y;
     double z;
-    /// links on line level (gamma-lambda)
+    /// links on point level (gamma-lambda)
     Point* gamma;
 
     Point* shifts;
+    /// container system
+    Line* cont;
 };
 
 void setPoint(Point* p,int color,double x, double y, double z);
 void printPoint(Point* p);
 void freePoint(Point* p);
 
-typedef struct v_Line Line;
 struct v_Line{
     /// unit
     int color;
@@ -39,6 +43,8 @@ struct v_Line{
     int gammaPointIndex; /// in line
 
     Line* shifts;
+    /// container system
+    Square* cont;
 };
 
 void setLine(Line* l,int color, Point* p0, double length, double phi, double theta);
@@ -46,7 +52,7 @@ void setNextLine(Line* l,int color, Line* l0, double length, double phiChange, d
 void calcPointsInLine(Line* l);
 void freeLine(Line* l);
 
-typedef struct v_Square Square;
+
 struct v_Square{
     /// unit
     int color;
@@ -64,6 +70,8 @@ struct v_Square{
     int gammaLineIndex;  /// in square
 
     Square* shifts;
+    /// container system
+    Cube* cont;
 };
 
 void setSquare(Square* sq, int color, Line* l0, double alpha);
@@ -77,7 +85,7 @@ void fillLineInSquare(Square* sq,int i);
 void printSquare(Square* sq);
 void freeSquare(Square* sq);
 
-typedef struct v_Cube Cube;
+
 struct v_Cube{
     /// unit
     int color;
@@ -99,16 +107,17 @@ struct v_Cube{
     Cube* shifts;
 };
 
+void setCube(Cube* sq, int color, Square* sq0);
+void setNextCube(Cube* sq, Cube* sq0,int lineIndex, double alpha);
+
 void calcPointsInCube(Cube* l);
 void fillLineInCube(Cube* c,int i);
 void fillSquareInCube(Cube* c,int i);
 
-CvPoint toCvPoint(Point* p);
+
 Point toPoint(double x, double y);
 Line toLine(double x1, double y1, double x2, double y2);
 Square toSquare(double x1, double y1, double x2, double y2,double x3, double y3, double x4, double y4);
 
-void drawLine(CvArr* img,Line l);
 
-void drawSquare(CvArr* img,Square l);
 #endif // VUSEN_H_INCLUDED

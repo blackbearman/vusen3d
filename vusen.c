@@ -1,4 +1,7 @@
 #include "vusen.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include "geometry.h"
 
 /// Point constructor
 void setPoint(Point* p,int color,double x, double y, double z){
@@ -163,13 +166,6 @@ void freeSquare(Square* sq){
 }
 
 
-CvPoint toCvPoint(Point* p){
-    static const double half_s45 = sqrt(2.0) / 4.0;
-    double z_projection = p->z * half_s45;
-    double sx = p->x - z_projection;
-    double sy = p->y + z_projection;
-    return cvPoint(cvRound(sx),cvRound(sy));
-}
 
 Point toPoint(double x, double y){
     Point p;
@@ -187,15 +183,6 @@ Line toLine(double x1, double y1, double x2, double y2){
     return l;
 }
 
-void drawLine(CvArr* img,Line l){
-    cvLine(img,toCvPoint(l.p[0]),toCvPoint(l.p[1]),CV_RGB(0,0,0),1,8,0);
-}
-
-void drawSquare(CvArr* img,Square sq){
-    int i;
-    for(i = 0; i < 4; i++)
-        drawLine(img,*(sq.lin[i]));
-}
 
 Square toSquare(double x1, double y1, double x2, double y2,double x3, double y3, double x4, double y4){
     Square sq;
