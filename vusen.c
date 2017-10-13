@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "geometry.h"
-
+/// //////////// POINT //////////////////
 /// Point constructor
 void setPoint(Point* p,int color,double x, double y, double z){
     p->color = color;
@@ -15,7 +15,7 @@ void printPoint(Point* p){
 }
 /// Point destructor
 void freePoint(Point* p){}
-
+/// ///////////////// LINE ///////////////////////////////
 void setLineBase(Line* l,int color, Point* p0, double length, double phi, double theta){
     l->color = color;
     l->length = length;
@@ -53,7 +53,7 @@ void setNextLine(Line* l,int color, Line* l0, double length, double phiChange, d
 void setTurnLine(Line* l,int color, Line* l0, double length, double turnAngle, double dirAngle){
     Point endPoint;
     double phi = l0->phi;
-    double theta = l0->theta + turnAngle;
+    double theta = l0->theta - turnAngle;
     if(theta > M_PI) {
         theta -= M_PI;
         phi = -phi;
@@ -98,7 +98,7 @@ void freeLine(Line* l){
     free(l->p[0]);
     free(l->p[1]);
 }
-
+/// /////////////////// SQUARE //////////////////////////////
 /// Square constructor
 void setSquare(Square* sq, int color, Line* l0, double alpha){
     sq->color = color;
@@ -110,11 +110,26 @@ void setSquare(Square* sq, int color, Line* l0, double alpha){
     }
     *(sq->lin[0]) = *l0;
     sq->lin0 = sq->lin[0];
+    sq->lin[0]->p[0] = sq->p[0];
+    sq->lin[0]->p[1] = sq->p[1];
     *(sq->p[0]) = *(l0->p[0]);
     *(sq->p[1]) = *(l0->p[1]);
     calcPointsInSquare(sq);
     for(i=1; i<4; i++)
         fillLineInSquare(sq,i);
+}
+
+void setNextSquare(Square* sq, Square* sq0, double alpha){
+    Line lin0;
+    setLine(&lin0,sq->lin[2]->color,sq0->p[3],sq->lin[2]->length,-sq->lin[2]->phi,M_PI-sq->lin[2]->theta);
+    setSquare(sq,sq0->color,&lin0,alpha);
+    freeLine(&lin0);
+}
+void setSquareFromPoint(Square* sq, int color, Point* p0, double length, double phi, double theta, double alpha){
+    Line lin0;
+    setLine(&lin0,color,p0,length,phi,theta);
+    setSquare(sq,color,&lin0,alpha);
+    freeLine(&lin0);
 }
 
 /// Fill third and fourth point
@@ -127,10 +142,9 @@ void calcPointsInSquare(Square* sq){
     double cp = cos(sq->lin0->phi);
     double st = sin(sq->lin0->theta);///0
     double ct = cos(sq->lin0->theta);///1
-    double a = ca*st;
-    double deltaX = sq->lin0->length * ( ca * st * cp - sa * sp);
-    double deltaY = sq->lin0->length * ( -ca * st * sp + sa * cp);
-    double deltaZ = sq->lin0->length * ( -ca * ct);
+    double deltaX = sq->lin0->length * ( -ca * ct * cp + sa * sp);
+    double deltaY = sq->lin0->length * ( -ca * ct * sp - sa * cp);
+    double deltaZ = sq->lin0->length * ( ca * st);
     sq->p[2]->x = sq->p[1]->x + deltaX;
     sq->p[2]->y = sq->p[1]->y + deltaY;
     sq->p[2]->z = sq->p[1]->z + deltaZ;
@@ -180,9 +194,57 @@ void freeSquare(Square* sq){
         free(sq->p[i]);
     }
 }
+void setPointsInLine(Line* lin, Point* p1, Point* p2) {
+    lin->p0 = lin->p[0] = p1;
+    lin->p[1] = p2;
+}
+void setNPointsInContour(int n, Line** lin, Point** p) {
+    int i;
+    for(i = 0; i<n-1; i++)
+        setPointsInLine(lin[i],p[i],p[i+1]);
+    setPointsInLine(lin[n-1],p[n-1],p[0]);
+}
+/// ////////////////// CUBE //////////////////////
+/// Cube constructor
+void setCube(Cube* cb, int color, Square* sq0) {
+    int i;
+    for(i=0; i<6; i++)
+        cb->sq[i] = malloc(sizeof(Square));
+    for(i=0; i<4; i++)
+        cb->lin[i] = malloc(sizeof(Line));
+    for(i=0; i<4; i++)
+        cb->p[i] = malloc(sizeof(Point));
+    cb->color = color;
+    *(cb->sq[0]) = *sq0;
+    for(i=0; i<4; i++)
+        cb->lin[i] = sq0->lin[i];   /// first 4 lines
+    setNPointsInContour(4,cb->lin,cb->p);
+    setNPointsInContour(4,cb->lin+4,cb->p+4);
+    //setPointsInLine();
+    cb->sq0 = cb->sq[0];
+    for(i=0; i<4; i++)
+        *(cb->p[i]) = *(sq0->p[i]); /// first 4 points
+//    calcPointsInCube(cb);     /// another 4 points
+}
+void setNextCube(Cube* cb, Cube* sq0,int lineIndex, double alpha);
+
+void calcPointsInCube(Cube* cb);
+void fillLineInCube(Cube* cb,int i);
+void fillSquareInCube(Cube* cb,int i);
+void printCube(Cube* cb);
+/// Cube destructor
+void freeCube(Cube* cb){
+    int i;
+    for(i=0; i<8; i++)
+        free(cb->p[i]);
+    for(i=0; i<12; i++)
+        free(cb->lin[i]);
+    for(i=0; i<6; i++)
+        free(cb->sq[i]);
+}
 
 
-
+/// ////////////////// OTHER //////////////////////
 Point toPoint(double x, double y){
     Point p;
     p.x = x;

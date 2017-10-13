@@ -29,7 +29,7 @@ int main()
     drawLine(img,&l);
     printLine(&l);
     Line up;
-    setTurnLine(&up,0,&l,10,M_PI_2,0);
+    setTurnLine(&up,0,&l,10,M_PI_2,-M_PI_4);
     drawLine(img,&up);
     printLine(&up);
     /*
@@ -57,14 +57,16 @@ int main()
 
     Point p3;
     setPoint(&p3,0,100,100,100);
-/*
+
 
     Line l5;
     Square sq0;
-    setLine(&l5,0,&p3,50,2*M_PI_2/3,0);
-    setSquare(&sq0,0,&l5,0);
+    setLine(&l5,0,&p3,50,2*M_PI_2/3,M_PI_4);
+    printLine(&l5);
+    setSquare(&sq0,0,&l5,M_PI_4);
     drawSquare(img,&sq0);
-
+    printSquare(&sq0);
+/*
     setLine(&l5,0,&p3,50,2*M_PI_2/3,0);
     setSquare(&sq0,0,&l5,2*M_PI_2/3);
     drawSquare(img,&sq0);

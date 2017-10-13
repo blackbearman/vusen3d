@@ -50,7 +50,6 @@ struct v_Line{
 void setLine(Line* l,int color, Point* p0, double length, double phi, double theta);
 void setNextLine(Line* l,int color, Line* l0, double length, double phiChange, double thetaChange);
 void setTurnLine(Line* l,int color, Line* l0, double length, double turnAngle, double dirAngle);
-void calcPointsInLine(Line* l);
 void printLine(Line* l);
 void freeLine(Line* l);
 
@@ -109,13 +108,14 @@ struct v_Cube{
     Cube* shifts;
 };
 
-void setCube(Cube* sq, int color, Square* sq0);
-void setNextCube(Cube* sq, Cube* sq0,int lineIndex, double alpha);
+void setCube(Cube* cb, int color, Square* sq0);
+void setNextCube(Cube* cb, Cube* cb0,int lineIndex, double alpha);
 
-void calcPointsInCube(Cube* l);
-void fillLineInCube(Cube* c,int i);
-void fillSquareInCube(Cube* c,int i);
-
+void calcPointsInCube(Cube* cb);
+void fillLineInCube(Cube* cb,int i);
+void fillSquareInCube(Cube* cb,int i);
+void printCube(Cube* cb);
+void freeCube(Cube* cb);
 
 Point toPoint(double x, double y);
 Line toLine(double x1, double y1, double x2, double y2);

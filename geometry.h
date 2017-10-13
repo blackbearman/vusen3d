@@ -3,6 +3,15 @@
 
 #include "vusen.h"
 
+typedef struct v_Vector Vector;
+
+struct v_Vector{
+    double x,y,z;
+};
+
+Vector subsPoints(Point* from, Point* to);
+Vector toVector(double x, double y, double z);
+void addVectorToPoint(Point* dest, Point* src, Vector r);
 
 void recalcCartesian(Line* l);
 

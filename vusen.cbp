@@ -77,6 +77,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="drawing.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="drawing.h" />
 		<Unit filename="geometry.c">
 			<Option compilerVar="CC" />
 		</Unit>

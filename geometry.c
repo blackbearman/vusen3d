@@ -1,9 +1,31 @@
 #include "geometry.h"
 #include <stdio.h>
 
-Point multiplyMatrix(double m[3][3], Point t)
+Vector subsPoints(Point* from, Point* to) {
+    Vector t;
+    t.x = to->x - from->x;
+    t.y = to->y - from->y;
+    t.z = to->z - from->z;
+    return t;
+}
+
+Vector toVector(double x, double y, double z) {
+    Vector t;
+    t.x = x;
+    t.y = y;
+    t.z = z;
+    return t;
+}
+
+void addVectorToPoint(Point* dest, Point* src, Vector r) {
+    dest->x = r.x + src->x;
+    dest->y = r.y + src->y;
+    dest->z = r.z + src->z;
+}
+
+Vector multiplyMatrix(double m[3][3], Vector t)
 {
-    Point r;
+    Vector r;
     r.x = m[0][0] * t.x + m[0][1] * t.y + m[0][2] * t.z;
     r.y = m[1][0] * t.x + m[1][1] * t.y + m[1][2] * t.z;
     r.z = m[2][0] * t.x + m[2][1] * t.y + m[2][2] * t.z;
@@ -42,17 +64,12 @@ void rotate(Point* dest, Point* src, Line* axe, double angle){
     double u = (axe->p[1]->x - axe->p[0]->x) / axe->length;
     double v = (axe->p[1]->y - axe->p[0]->y) / axe->length;
     double w = (axe->p[1]->z - axe->p[0]->z) / axe->length;
-    Point t;
-    t.x = src->x - axe->p[0]->x;
-    t.y = src->y - axe->p[0]->y;
-    t.z = src->z - axe->p[0]->z;
+    Vector t = subsPoints(src,axe->p[0]);
     double m[3][3];
     setUpRotationMatrix(m,angle,u,v,w);
-    printMatrix(m);
-    Point r = multiplyMatrix(m,t);
-    dest->x = r.x + axe->p[0]->x;
-    dest->y = r.y + axe->p[0]->y;
-    dest->z = r.z + axe->p[0]->z;
+    //printMatrix(m);
+    Vector r = multiplyMatrix(m,t);
+    addVectorToPoint(dest,axe->p[0],r);
 }
 
 void recalcCartesian(Line* l) {
